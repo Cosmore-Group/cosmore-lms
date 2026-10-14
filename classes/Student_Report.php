@@ -32,21 +32,21 @@ class Student_Report {
 	}
 
 	/**
-	 * Register the page and hide it from the menu: it is reached from the Students list.
+	 * Register the page without a parent, so it has no menu entry: it is reached from the
+	 * Students list. (Registering it under `tutor` and removing it from the menu leaves
+	 * WordPress unable to resolve the parent, and the page answers "not allowed".)
 	 *
 	 * @return void
 	 */
 	public function register_page() {
 		add_submenu_page(
-			'tutor',
+			'',
 			__( 'Student', 'tutor' ),
 			__( 'Student', 'tutor' ),
 			'manage_tutor',
 			self::PAGE_SLUG,
 			array( $this, 'render' )
 		);
-
-		remove_submenu_page( 'tutor', self::PAGE_SLUG );
 	}
 
 	/**
