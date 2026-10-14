@@ -149,34 +149,11 @@ class Tutor_Setup {
 				'tutor-setup',
 				'_tutorOnboardObject',
 				array(
-					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor&welcome=1' ),
+					'tutor_welcome_page' => admin_url( 'admin.php?page=tutor' ),
 					'course_data_url'    => 'https://tutor-lms.s3.us-east-1.amazonaws.com/courses/workademy/data.json',
 				)
 			);
 			wp_set_script_translations( 'tutor-setup', 'tutor', tutor()->path . 'languages/' );
 		}
-	}
-
-
-	/**
-	 * Check if welcome page already visited
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool
-	 */
-	public static function is_welcome_page_visited(): bool {
-		return false;
-	}
-
-	/**
-	 * Mark as welcome page visited
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public static function mark_as_visited() {
-		update_option( 'tutor_welcome_page_visited', true );
 	}
 }

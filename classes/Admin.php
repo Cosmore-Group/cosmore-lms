@@ -42,7 +42,6 @@ class Admin {
 		add_filter( 'submenu_file', array( $this, 'submenu_file_active' ), 10, 2 );
 
 		add_action( 'admin_init', array( $this, 'filter_posts_for_instructors' ) );
-		add_action( 'admin_init', array( $this, 'redirect_to_welcome_page' ) );
 		add_action( 'load-post.php', array( $this, 'check_if_current_users_post' ) );
 
 		add_filter( 'plugin_action_links_' . plugin_basename( TUTOR_FILE ), array( $this, 'plugin_action_links' ) );
@@ -60,12 +59,7 @@ class Admin {
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
-		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
-
 		add_action( 'upgrader_process_complete', array( $this, 'set_permalink_flag_on_upgrade' ), 10, 2 );
-
-		add_action( 'admin_notices', array( $this, 'show_offer_notice' ) );
-		add_action( 'wp_ajax_tutor_dismiss_offer_notice', array( $this, 'ajax_dismiss_offer_notice' ) );
 	}
 
 	/**
@@ -80,97 +74,6 @@ class Admin {
 	 */
 	public function set_permalink_flag_on_upgrade( $upgrader_object, $options ) {
 		Permalink::set_permalink_reset_flag( $upgrader_object, $options );
-	}
-
-	/**
-	 * Check offer notice is dismissed.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return bool
-	 */
-	private function is_offer_notice_dismissed() {
-		return '4.0.0' === get_transient( 'tutor_offer_notice_dismissed' );
-	}
-
-	/**
-	 * Show offer notice
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	public function show_offer_notice() {
-		if ( ! User::is_admin() || Input::has( 'welcome', Input::GET_REQUEST ) ) {
-			return;
-		}
-
-		$is_free_user = ! tutor()->has_pro;
-		$cta_label    = __( 'Claim 30% OFF', 'tutor' );
-		$cta_link     = 'https://tutorlms.com/pricing/?utm_source=tutor-plugin&utm_medium=notice&utm_campaign=tutor-lms-pro-offer';
-
-		$now           = new \DateTimeImmutable( 'now', wp_timezone() );
-		$expiration_dt = '2026-07-15 23:59:59';
-		$expiration    = new \DateTimeImmutable( $expiration_dt, wp_timezone() );
-
-		$remaining = max( 0, $expiration->getTimestamp() - $now->getTimestamp() );
-
-		$days    = floor( $remaining / DAY_IN_SECONDS );
-		$hours   = floor( ( $remaining % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
-		$minutes = floor( ( $remaining % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
-		$seconds = $remaining % MINUTE_IN_SECONDS;
-
-		$expire_in = sprintf(
-			'%dd:%02dh:%02d:%02d',
-			$days,
-			$hours,
-			$minutes,
-			$seconds
-		);
-
-		if ( $is_free_user && $remaining > 0 && ! self::is_offer_notice_dismissed() ) {
-			?>
-			<div class="tutor-offer-notice">
-				<div class="tutor-offer-notice-wrapper">
-					<div class="tutor-offer-notice-left">
-						<div data-subheader><?php esc_html_e( '4.0 launch offer', 'tutor' ); ?></div>
-						<div data-header><?php esc_html_e( '30% OFF', 'tutor' ); ?></div>
-						<div data-subtext><?php esc_html_e( 'on all annual plans', 'tutor' ); ?></div>
-					</div>
-					<div class="tutor-offer-notice-right">
-						<div class="tutor-offer-notice-text"><?php esc_html_e( 'Offer ends by', 'tutor' ); ?> <span class="tutor-offer-notice-timer" data-expiry="<?php echo esc_attr( $expiration->getTimestamp() ); ?>"><?php echo esc_html( $expire_in ); ?></span></div>
-						<a class="tutor-offer-notice-cta" href="<?php echo esc_url( $cta_link ); ?>" target="_blank">
-							<?php echo esc_html( $cta_label ); ?>
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M13.938 6.937a.55.55 0 0 0-.786 0 .555.555 0 0 0 0 .778l3.338 3.34H5.243a.55.55 0 0 0-.55.551c0 .305.242.558.55.558h11.246l-3.337 3.334a.563.563 0 0 0 0 .785.55.55 0 0 0 .786 0L18.217 12a.543.543 0 0 0 0-.78z"/></svg>
-						</a>	
-					</div>
-				</div>
-				<button type="button" class="tutor-offer-notice-dismiss"><span class="tutor-icon-times"></span></button>
-			</div>
-			<?php
-		}
-	}
-
-	/**
-	 * Dismiss offer notice.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void JSON response.
-	 */
-	public function ajax_dismiss_offer_notice() {
-		if ( ! User::is_admin() ) {
-			$this->response_bad_request( tutor_utils()->error_message() );
-		}
-
-		if ( self::is_offer_notice_dismissed() ) {
-			$this->response_bad_request( __( 'You have already dismissed the offer notice.', 'tutor' ) );
-		}
-
-		// Set expiry until next day.
-		$expiration = strtotime( 'tomorrow' ) - time();
-		set_transient( 'tutor_offer_notice_dismissed', '4.0.0', $expiration );
-		$this->json_response( __( 'Notice dismissed', 'tutor' ) );
 	}
 
 	/**
@@ -203,8 +106,6 @@ class Admin {
 	 * @return void
 	 */
 	public function register_menu() {
-		$has_pro = tutor()->has_pro;
-
 		$unanswered_questions = tutor_utils()->unanswered_question_count();
 		$unanswered_bubble    = '';
 		if ( $unanswered_questions ) {
@@ -213,34 +114,22 @@ class Admin {
 
 		$course_post_type = tutor()->course_post_type;
 
-		$pro_text = '';
-		if ( $has_pro ) {
-			$pro_text = ' ' . apply_filters( 'tutor_pro_flag', __( 'Pro', 'tutor' ) );
-		}
-
 		$enable_course_marketplace = (bool) tutor_utils()->get_option( 'enable_course_marketplace' );
 
-		$welcome = Tutor_Setup::is_welcome_page_visited();
-
 		$root_page = array( $this, 'tutor_course_list' );
-		if ( false === $welcome && Input::has( 'page' ) && 'tutor' === Input::get( 'page' ) && Input::has( 'welcome' ) ) {
-			$root_page = array( $this, 'welcome_page' );
-		}
 
 		$icon_base64_uri = 'data:image/svg+xml;base64,' . base64_encode( '<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1139"><defs/><path fill-rule="evenodd" clip-rule="evenodd" d="M341.652 622.4c-23.412 0-43.222-19.8-43.222-43.2v-99c0-23.4 19.81-43.2 43.222-43.2 23.412 0 43.222 19.8 43.222 43.2v99c0 23.4-18.009 43.2-43.222 43.2 1.801 0 1.801 0 0 0zM655.01 622.4c-23.412 0-43.222-18-43.222-43.2v-99c0-23.4 19.81-43.2 43.222-43.2 23.412 0 43.222 19.8 43.222 43.2v99c0 25.2-19.81 43.2-43.222 43.2z" fill="#9DA2A8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M255.204 406.4c18.009-37.8 54.028-63 95.449-63 61.231 1.8 108.055 52.2 106.254 113.4v203.4c3.602 21.6 23.412 37.8 45.023 34.2 18.009-1.8 32.416-16.2 34.217-34.2V455c-1.801-61.2 46.824-111.6 106.254-113.4 39.621 0 75.639 21.6 93.648 59.4 68.435 133.2 14.407 295.2-117.06 363.6C487.523 833 325.44 779 258.806 647.6c-39.62-75.6-39.62-165.6-3.602-241.2zM426.291 140h151.277v59.4c-25.212-5.4-52.226-9-77.439-9-25.213 0-50.426 3.6-75.639 7.2l1.801-57.6zm414.211 388.8c0-122.4-66.634-235.8-172.888-295.2V140h64.833c25.213 0 45.023-19.8 45.023-45s-21.611-45-45.023-45H271.413C246.2 51.8 226.39 71.6 226.39 96.8c0 25.2 19.81 45 45.023 45h66.633v91.8c-163.883 90-230.517 298.8-135.068 459 3.602 5.4-3.602-5.4 0 0C338.046 930.2 687.424 948.2 802.683 950c10.805 0 19.81-3.6 27.014-10.8 7.203-7.2 10.805-18 10.805-27V528.8z" fill="#9DA2A8"/></svg>' );
 		$menu_position   = 2;
 
 		add_menu_page(
-			__( 'Tutor LMS', 'tutor' ) . $pro_text,
-			__( 'Tutor LMS', 'tutor' ) . $pro_text,
+			__( 'Cosmore LMS', 'tutor' ),
+			__( 'Cosmore LMS', 'tutor' ),
 			'manage_tutor_instructor',
 			'tutor',
 			$root_page,
 			$icon_base64_uri,
 			$menu_position
 		);
-
-		new WhatsNew();
 
 		$admin_menu = apply_filters(
 			'tutor_admin_menu',
@@ -342,14 +231,7 @@ class Admin {
 					'zoom'             => null,
 					'google_meet'      => null,
 					'h5p'              => null,
-					'addons'           => array(
-						'parent_slug' => 'tutor',
-						'page_title'  => __( 'Addons', 'tutor' ),
-						'menu_title'  => __( 'Addons', 'tutor' ),
-						'capability'  => 'manage_tutor',
-						'menu_slug'   => 'tutor-addons',
-						'callback'    => array( $this, 'enable_disable_addons' ),
-					),
+					'addons'           => null,
 					'tools'            => array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Tools', 'tutor' ),
@@ -367,15 +249,6 @@ class Admin {
 						'callback'    => array( new Options_V2(), 'load_settings_page' ),
 					),
 					'license'          => null,
-					'whats_new'        => null,
-					'upgrade_to_pro'   => $has_pro ? null : array(
-						'parent_slug' => 'tutor',
-						'page_title'  => __( 'Upgrade to Pro', 'tutor' ),
-						'menu_title'  => sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ),
-						'capability'  => 'manage_options',
-						'menu_slug'   => 'tutor-get-pro',
-						'callback'    => array( $this, 'tutor_get_pro' ),
-					),
 				),
 			)
 		);
@@ -411,37 +284,6 @@ class Admin {
 				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
 			}
 		}
-	}
-
-	/**
-	 * Welcome page opt-out
-	 *
-	 * @since 3.0.0
-	 */
-	public function handle_do_not_show_feature_page() {
-		tutor_utils()->check_nonce();
-
-		if ( ! User::is_admin() ) {
-			$this->json_response(
-				tutor_utils()->error_message(),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
-		}
-
-		update_option( 'tutor-new-feature', '3.0.0' );
-		$this->json_response( __( 'Success', 'tutor' ) );
-	}
-
-	/**
-	 * Show Feature Promotion Page for Free User.
-	 *
-	 * @since 2.2.0
-	 *
-	 * @return void
-	 */
-	public function feature_promotion_page() {
-		include tutor()->path . 'views/pages/welcome.php';
 	}
 
 	/**
@@ -554,17 +396,6 @@ class Admin {
 
 			include tutor()->path . 'views/pages/tools.php';
 		}
-	}
-
-	/**
-	 * Show pro upgrade page
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function tutor_get_pro() {
-		include tutor()->path . 'views/pages/get-pro.php';
 	}
 
 	/**
@@ -767,17 +598,6 @@ class Admin {
 	 * @return array
 	 */
 	public function plugin_action_links( $actions ) {
-		$has_pro = tutor()->has_pro;
-
-		if ( ! $has_pro ) {
-			$actions['tutor_pro_link'] =
-				'<a href="https://tutorlms.com/pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank">
-					<span style="color: #ff7742; font-weight: bold;">' .
-						__( 'Upgrade to Pro', 'tutor' ) .
-					'</span>
-				</a>';
-		}
-
 		$actions['settings'] = '<a href="admin.php?page=tutor_settings">' . __( 'Settings', 'tutor' ) . '</a>';
 
 		return $actions;
@@ -905,19 +725,6 @@ class Admin {
 	}
 
 	/**
-	 * Show welcome page
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function welcome_page() {
-		Tutor_Setup::mark_as_visited();
-		include tutor()->path . 'views/pages/welcome.php';
-		exit;
-	}
-
-	/**
 	 * Add toolbar items
 	 *
 	 * @since 1.4.6
@@ -964,25 +771,4 @@ class Admin {
 		return $admin_bar;
 	}
 
-	/**
-	 * Redirect to welcome page if user is not logged in.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return void
-	 */
-	public function redirect_to_welcome_page() {
-		// Skip for fresh installs, during the setup wizard, or during AJAX.
-		if ( ! get_option( 'tutor_wizard' ) || 'tutor-setup' === Input::get( 'page' ) || wp_doing_ajax() ) {
-			return;
-		}
-
-		$tutor_new_feature = get_option( 'tutor-new-feature' );
-		if ( version_compare( $tutor_new_feature, '4.0.0-rc.2', '>=' ) ) {
-			return;
-		}
-
-		wp_safe_redirect( admin_url( 'admin.php?page=tutor&welcome=1' ) );
-		update_option( 'tutor-new-feature', TUTOR_VERSION );
-	}
 }
