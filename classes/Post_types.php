@@ -120,7 +120,8 @@ class Post_types {
 			'menu_icon'          => 'dashicons-book-alt',
 			'capability_type'    => 'post',
 			'map_meta_cap'       => true,
-			'has_archive'        => true,
+			// The course list is a page of the site, not an archive of the plugin.
+			'has_archive'        => false,
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'taxonomies'         => array( CourseModel::COURSE_CATEGORY, CourseModel::COURSE_TAG ),

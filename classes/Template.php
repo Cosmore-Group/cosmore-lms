@@ -130,7 +130,6 @@ class Template extends Tutor_Base {
 			return;
 		}
 
-		add_filter( 'template_include', array( $this, 'load_course_archive_template' ), 99 );
 		add_filter( 'template_include', array( $this, 'load_single_course_template' ), 99 );
 		add_filter( 'template_include', array( $this, 'play_private_video' ), 99 );
 		add_filter( 'tutor_single_content_template', array( $this, 'load_single_lesson_template' ), 99, 2 );
@@ -143,33 +142,6 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array( $this, 'load_learning_template' ) );
 
 		$this->shortcode_obj = new Shortcode( false );
-	}
-
-	/**
-	 * Load default template for course
-	 *
-	 * @since v.1.0.0
-	 *
-	 * @param sting $template template name.
-	 *
-	 * @return bool|string
-	 */
-	public function load_course_archive_template( $template ) {
-		global $wp_query;
-
-		$post_type = get_query_var( 'post_type' );
-		if ( ! is_array( $post_type ) ) {
-			$post_type = array( $post_type );
-		}
-
-		$course_category = get_query_var( 'course-category' );
-
-		if ( ( in_array( $this->course_post_type, $post_type, true ) || ! empty( $course_category ) ) && $wp_query->is_archive ) {
-			$template = tutor_get_template( 'archive-course' );
-			return $template;
-		}
-
-		return $template;
 	}
 
 	/**
