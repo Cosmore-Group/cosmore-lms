@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Tutor LMS
- * Plugin URI: https://tutorlms.com
+ * Plugin Name: Cosmore LMS
+ * Plugin URI: https://cosmore.com
  * Description: Build and manage professional online courses with unlimited lessons, a flexible quiz engine, and a complete student learning experience. No coding needed.
- * Author: Themeum
+ * Author: Gabriele Corio
  * Version: 4.1.1
- * Author URI: https://themeum.com
+ * Author URI: https://github.com/GabrieleCorio
  * Requires PHP: 7.4
  * Requires at least: 5.3
  * Tested up to: 7.1
