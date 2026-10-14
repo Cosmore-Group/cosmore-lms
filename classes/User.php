@@ -101,10 +101,6 @@ class User {
 			return;
 		}
 
-		add_action( 'edit_user_profile', array( $this, 'edit_user_profile' ) );
-		add_action( 'show_user_profile', array( $this, 'edit_user_profile' ), 10, 1 );
-
-		add_action( 'profile_update', array( $this, 'profile_update' ) );
 		add_action( 'set_user_role', array( $this, 'set_user_role' ), 10, 3 );
 
 		add_action( 'wp_ajax_tutor_user_photo_remove', array( $this, 'tutor_user_photo_remove' ) );
@@ -337,19 +333,6 @@ class User {
 	);
 
 	/**
-	 * Include edit user template
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param mixed $user user.
-	 *
-	 * @return void
-	 */
-	public function edit_user_profile( $user ) {
-		include tutor()->path . 'views/metabox/user-profile-fields.php';
-	}
-
-	/**
 	 * Delete existing user's photo
 	 *
 	 * @since 1.0.0
@@ -489,31 +472,6 @@ class User {
 		}
 
 		return $timezone;
-	}
-
-	/**
-	 * Profile update
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $user_id user id.
-	 *
-	 * @return void
-	 */
-	public function profile_update( $user_id ) {
-		if ( 'tutor_profile_update_by_wp' !== Input::post( 'tutor_action' ) ) {
-			return;
-		}
-
-		$timezone                 = Input::post( 'timezone', '' );
-		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
-		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
-		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
-
-		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );
-		update_user_meta( $user_id, self::PROFILE_BIO_META, $_tutor_profile_bio );
-		update_user_meta( $user_id, self::PROFILE_PHOTO_META, $_tutor_profile_image );
-		update_user_meta( $user_id, self::TIMEZONE_META, $timezone );
 	}
 
 	/**
