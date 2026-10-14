@@ -951,25 +951,16 @@ class Assets {
 		$is_legacy_learning = tutor_utils()->is_legacy_learning_mode();
 		$is_dashboard       = tutor_utils()->is_dashboard_page();
 
-		$page_ids = array(
-			(int) tutor_utils()->get_option( 'student_register_page' ),
-			(int) tutor_utils()->get_option( 'instructor_register_page' ),
-		);
-
 		// Ignore loading legacy scripts on specific case.
 		if ( $is_learning_area && ! $is_legacy_learning ) {
 			$load = false;
 		} elseif ( $is_dashboard ) {
-			$load = false;
-		} elseif ( in_array( $post_id, $page_ids, true ) ) {
 			$load = false;
 		} else {
 			// Ignore loading legacy scripts for these shortcodes.
 			$has_shortcode = false;
 
 			$shortcdes = array(
-				'tutor_student_registration_form',
-				'tutor_instructor_registration_form',
 				'tutor_dashboard',
 				'tutor_login',
 			);
@@ -981,21 +972,6 @@ class Assets {
 				if ( $has_shortcode ) {
 					$load = false;
 					break;
-				}
-			}
-
-			// Ignore loading legacy scripts for these blocks on frontend.
-			if ( $load && function_exists( 'has_block' ) ) {
-				$blocks = array(
-					'tutor-gutenberg/student-registration',
-					'tutor-gutenberg/instructor-registration',
-				);
-
-				foreach ( $blocks as $block ) {
-					if ( has_block( $block, $post_id ) ) {
-						$load = false;
-						break;
-					}
 				}
 			}
 		}

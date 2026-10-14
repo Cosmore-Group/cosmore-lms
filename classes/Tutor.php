@@ -1171,24 +1171,6 @@ final class Tutor extends Singleton {
 		);
 		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
 		tutor_utils()->update_option( 'tutor_dashboard_page_id', $student_dashboard_page_id );
-
-		$student_registration_args = array(
-			'post_title'   => __( 'Student Registration', 'tutor' ),
-			'post_content' => '[tutor_student_registration_form]',
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-		);
-		$student_register_page_id  = wp_insert_post( $student_registration_args );
-		tutor_utils()->update_option( 'student_register_page', $student_register_page_id );
-
-		$instructor_registration_args = array(
-			'post_title'   => __( 'Instructor Registration', 'tutor' ),
-			'post_content' => '[tutor_instructor_registration_form]',
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-		);
-		$instructor_registration_id   = wp_insert_post( $instructor_registration_args );
-		tutor_utils()->update_option( 'instructor_register_page', $instructor_registration_id );
 	}
 
 	/**

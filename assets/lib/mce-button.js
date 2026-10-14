@@ -16,18 +16,6 @@ jQuery(document).ready(function($){
             type: 'menubutton',
             menu: [
                 {
-                    text: editor.getLang('tutor_button.student_registration_form'),
-                    onclick: function() {
-                        editor.insertContent('[tutor_student_registration_form]');
-                    }
-                },
-                {
-                    text: editor.getLang('tutor_button.instructor_registration_form'),
-                    onclick: function() {
-                        editor.insertContent('[tutor_instructor_registration_form]');
-                    }
-                },
-                {
                     text: editor.getLang('tutor_button.courses'),
                     onclick: function() {
                         editor.windowManager.open( {

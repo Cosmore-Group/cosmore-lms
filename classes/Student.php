@@ -135,7 +135,7 @@ class Student {
 
 		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 		if ( $is_req_email_verification ) {
-			$redirect_url = tutor_utils()->student_register_url();
+			$redirect_url = tutor_utils()->tutor_dashboard_url();
 
 			do_action( 'tutor_send_verification_mail', $user, $enroll_attempt );
 			$reg_done = apply_filters( 'tutor_registration_done', true );

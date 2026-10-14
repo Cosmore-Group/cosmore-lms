@@ -53,9 +53,7 @@ class Shortcode {
 			return;
 		}
 
-		add_shortcode( 'tutor_student_registration_form', array( $this, 'student_registration_form' ) );
 		add_shortcode( 'tutor_dashboard', array( $this, 'tutor_dashboard' ) );
-		add_shortcode( 'tutor_instructor_registration_form', array( $this, 'instructor_registration_form' ) );
 		add_shortcode( 'tutor_course', array( $this, 'tutor_course' ) );
 
 		add_shortcode( 'tutor_instructor_list', array( $this, 'tutor_instructor_list' ) );
@@ -73,23 +71,6 @@ class Shortcode {
 		 */
 		add_action( 'wp_ajax_show_more', array( $this, 'show_more' ) );
 		add_action( 'wp_ajax_nopriv_show_more', array( $this, 'show_more' ) );
-	}
-
-	/**
-	 *  Instructor Registration Shortcode
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return mixed
-	 */
-	public function student_registration_form() {
-		ob_start();
-		if ( is_user_logged_in() ) {
-			tutor_load_template( 'dashboard.logged-in' );
-		} else {
-			tutor_load_template( 'dashboard.registration' );
-		}
-		return apply_filters( 'tutor/student/register', ob_get_clean() );
 	}
 
 	/**
@@ -125,23 +106,6 @@ class Shortcode {
 			echo sprintf( __( 'Please %s to view this page', 'tutor' ), $signin_link ); //phpcs:ignore
 		}
 		return apply_filters( 'tutor_dashboard/index', ob_get_clean() );
-	}
-
-	/**
-	 * Instructor Registration Shortcode
-	 *
-	 * @since v.1.0.0
-	 *
-	 * @return mixed
-	 */
-	public function instructor_registration_form() {
-		ob_start();
-		if ( is_user_logged_in() ) {
-			tutor_load_template( 'dashboard.instructor.logged-in' );
-		} else {
-			tutor_load_template( 'dashboard.instructor.registration' );
-		}
-		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
 	}
 
 	/**

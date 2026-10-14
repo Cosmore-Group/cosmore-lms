@@ -399,17 +399,6 @@ class Template extends Tutor_Base {
 			return $this->shortcode_obj->tutor_dashboard();
 		}
 
-		// Instructor Registration Page.
-		$instructor_register_page_page_id = (int) tutor_utils()->get_option( 'instructor_register_page' );
-		if ( $page_id === $instructor_register_page_page_id ) {
-			return $this->shortcode_obj->instructor_registration_form();
-		}
-
-		$student_register_page_id = (int) tutor_utils()->get_option( 'student_register_page' );
-		if ( $page_id === $student_register_page_id ) {
-			return $this->shortcode_obj->student_registration_form();
-		}
-
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
 			$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
 			if ( $page_id === $tutor_cart_page_id ) {

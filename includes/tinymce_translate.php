@@ -26,8 +26,6 @@ if ( ! class_exists( '_WP_Editors' ) ) {
 function tutor_tinymce_plugin_translation() {
 	$strings = array(
 		'tutor_shortcode'              => __( 'Tutor ShortCode', 'tutor' ),
-		'student_registration_form'    => __( 'Student Registration Form', 'tutor' ),
-		'instructor_registration_form' => __( 'Instructor Registration Form', 'tutor' ),
 		'courses'                      => _x( 'Courses', 'tinyMCE button courses', 'tutor' ),
 		'courses_shortcode'            => __( 'Courses Shortcode', 'tutor' ),
 		'courses_separate_by'          => __( 'Course id, separate by (,) comma', 'tutor' ),

@@ -179,14 +179,6 @@ const createConfig = (env, options) => {
             from: 'assets/src/blocks/cart-button/render.php',
             to: 'blocks/cart-button/render.php',
           },
-          {
-            from: 'assets/src/blocks/student-registration/block.json',
-            to: 'blocks/student-registration/block.json',
-          },
-          {
-            from: 'assets/src/blocks/instructor-registration/block.json',
-            to: 'blocks/instructor-registration/block.json',
-          },
         ],
       }),
       new rspack.ProvidePlugin({

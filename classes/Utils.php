@@ -5530,40 +5530,6 @@ class Utils {
 	}
 
 	/**
-	 * Student registration form
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool|false|string
-	 */
-	public function student_register_url() {
-		$student_register_page = (int) $this->get_option( 'student_register_page' );
-
-		if ( $student_register_page ) {
-			return apply_filters( 'tutor_student_register_url', get_the_permalink( $student_register_page ) );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Instructor registration form
-	 *
-	 * @since v.1.2.13
-	 *
-	 * @return bool|false|string
-	 */
-	public function instructor_register_url() {
-		$instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
-
-		if ( $instructor_register_page ) {
-			return apply_filters( 'tutor_instructor_register_url', get_the_permalink( $instructor_register_page ) );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get frontend dashboard URL
 	 *
 	 * @since 1.0.0
@@ -7113,8 +7079,6 @@ class Utils {
 			'tutor_pages',
 			array(
 				'tutor_dashboard_page_id'  => __( 'Dashboard Page', 'tutor' ),
-				'instructor_register_page' => __( 'Instructor Registration Page', 'tutor' ),
-				'student_register_page'    => __( 'Student Registration Page', 'tutor' ),
 				'tutor_cart_page_id'       => __( 'Cart', 'tutor' ),
 				'tutor_checkout_page_id'   => __( 'Checkout', 'tutor' ),
 			)

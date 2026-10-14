@@ -205,15 +205,6 @@ $is_instructor_view = User::is_instructor_view();
 									</div>
 								</div>
 								<?php
-							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status && $is_become_instructor_enabled ) {
-								?>
-								<div class="tutor-w-full tutor-sm-px-6">
-									<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small tutor-btn-block tutor-profile-switch-button">
-										<?php SvgIcon::make()->name( Icon::INSTRUCTOR )->render(); ?>
-										<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
-									</a>
-								</div>
-								<?php
 							}
 						}
 						if ( User::can_switch_mode( $user_id ) ) {

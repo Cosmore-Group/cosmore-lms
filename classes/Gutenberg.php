@@ -79,32 +79,6 @@ class Gutenberg {
 	 * @return void
 	 */
 	public function register_blocks() {
-		global $pagenow;
-		if ( 'widgets.php' !== $pagenow ) {
-			wp_register_script(
-				'tutor-student-registration-block',
-				tutor()->url . 'assets/lib/gutenberg_blocks.js',
-				array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' ),
-				TUTOR_VERSION
-			);
-		}
-
-		register_block_type(
-			tutor()->path . 'assets/blocks/student-registration',
-			array(
-				'editor_script'   => 'tutor-student-registration-block',
-				'render_callback' => array( $this, 'render_block_student_registration' ),
-			)
-		);
-
-		register_block_type(
-			tutor()->path . 'assets/blocks/instructor-registration',
-			array(
-				'editor_script'   => 'tutor-student-registration-block',
-				'render_callback' => array( $this, 'render_block_tutor_instructor_registration_form' ),
-			)
-		);
-
 		wp_register_style(
 			'tutor-cart-button',
 			tutor()->url . 'assets/blocks/cart-button/index.css',
@@ -113,26 +87,6 @@ class Gutenberg {
 		);
 
 		register_block_type( tutor()->path . 'assets/blocks/cart-button' );
-
-		// Check if WP version is equal to or greater than 5.9.
-		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-			wp_localize_script(
-				'tutor-student-registration-block',
-				'_tutor_gutenberg_block_data',
-				array(
-					'is_wp_version_5_9' => 'true',
-				)
-			);
-		} else {
-			wp_localize_script(
-				'tutor-student-registration-block',
-				'_tutor_gutenberg_block_data',
-				array(
-					'is_wp_version_5_9' => 'false',
-				)
-			);
-		}
 	}
 
 	/**
@@ -158,18 +112,6 @@ class Gutenberg {
 	}
 
 	/**
-	 * Render student registration block
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $args arguments.
-	 * @return mixed
-	 */
-	public function render_block_student_registration( $args ) {
-		return do_shortcode( '[tutor_student_registration_form]' );
-	}
-
-	/**
 	 * Render dashboard block
 	 *
 	 * @since 1.0.0
@@ -179,18 +121,6 @@ class Gutenberg {
 	 */
 	public function render_block_tutor_dashboard( $args ) {
 		return do_shortcode( '[tutor_dashboard]' );
-	}
-
-	/**
-	 * Render instructor registration block
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $args arguments.
-	 * @return mixed
-	 */
-	public function render_block_tutor_instructor_registration_form( $args ) {
-		return do_shortcode( '[tutor_instructor_registration_form]' );
 	}
 
 	/**
@@ -205,8 +135,6 @@ class Gutenberg {
 		$shortcode = Input::post( 'shortcode' );
 
 		$allowed_shortcode = array(
-			'tutor_instructor_registration_form',
-			'tutor_student_registration_form',
 			'tutor_cart_button',
 		);
 

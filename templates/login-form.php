@@ -86,24 +86,6 @@ do_action( 'tutor_before_login_form' );
 		<?php esc_html_e( 'Sign In', 'tutor' ); ?>
 	</button>
 
-	<?php if ( get_option( 'users_can_register', false ) ) : ?>
-		<?php
-			$url_arg = array(
-				'redirect_to' => tutor()->current_url,
-			);
-			if ( is_single_course() ) {
-				$url_arg['enrol_course_id'] = get_the_ID();
-			}
-			?>
-		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-2 tutor-mt-7">
-			<div class="tutor-small">
-				<?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>
-			</div>
-			<a href="<?php echo esc_url( add_query_arg( $url_arg, tutor_utils()->student_register_url() ) ); ?>" class="tutor-btn tutor-btn-link">
-				<?php esc_html_e( 'Register Now', 'tutor' ); ?>
-			</a>
-		</div>
-	<?php endif; ?>
 	<?php do_action( 'tutor_after_sign_in_button' ); ?>
 </form>
 <?php
