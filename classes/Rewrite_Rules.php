@@ -50,14 +50,6 @@ class Rewrite_Rules extends Tutor_Base {
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
 		$vars[] = 'tutor_dashboard_sub_page';
-
-		/**
-		 * If public_profile_layout is not private then
-		 * add rewrite rules
-		 *
-		 * @since v2.0.0
-		 */
-		$vars[] = 'tutor_profile_username';
 		return $vars;
 	}
 
@@ -88,8 +80,6 @@ class Rewrite_Rules extends Tutor_Base {
 
 			// Private Video URL.
 			'video-url/(.+?)/?$' => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=" . $wp_rewrite->preg_index( 1 ),
-			// Student Public Profile URL.
-			'profile/(.+?)/?$'   => 'index.php?tutor_profile_username=' . $wp_rewrite->preg_index( 1 ),
 		);
 
 		// Student Dashboard URL.

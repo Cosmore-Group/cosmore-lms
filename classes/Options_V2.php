@@ -1405,56 +1405,6 @@ class Options_V2 {
 									),
 								),
 							),
-							array(
-								'key'           => 'public_profile_layout',
-								'type'          => 'group_radio_full_3',
-								'label'         => __( 'Instructor Public Profile Layout', 'tutor' ),
-								'desc'          => __( 'Choose a layout design for a instructor’s public profile', 'tutor' ),
-								'default'       => 'pp-rectangle',
-								'group_options' => array(
-									'private'      => array(
-										'title' => __( 'Private', 'tutor' ),
-										'image' => 'profile-layout/profile-private.svg',
-									),
-									'pp-circle'    => array(
-										'title' => __( 'Modern', 'tutor' ),
-										'image' => 'profile-layout/profile-modern.svg',
-									),
-									'no-cp'        => array(
-										'title' => __( 'Minimal', 'tutor' ),
-										'image' => 'profile-layout/profile-minimal.svg',
-									),
-									'pp-rectangle' => array(
-										'title' => __( 'Classic', 'tutor' ),
-										'image' => 'profile-layout/profile-classic.svg',
-									),
-								),
-							),
-							array(
-								'key'           => 'student_public_profile_layout',
-								'type'          => 'group_radio_full_3',
-								'label'         => __( 'Student Public Profile Layout', 'tutor' ),
-								'desc'          => __( 'Choose a layout design for a student’s public profile', 'tutor' ),
-								'default'       => 'pp-rectangle',
-								'group_options' => array(
-									'private'      => array(
-										'title' => __( 'Private', 'tutor' ),
-										'image' => 'profile-layout/profile-private.svg',
-									),
-									'pp-circle'    => array(
-										'title' => __( 'Modern', 'tutor' ),
-										'image' => 'profile-layout/profile-modern.svg',
-									),
-									'no-cp'        => array(
-										'title' => __( 'Minimal', 'tutor' ),
-										'image' => 'profile-layout/profile-minimal.svg',
-									),
-									'pp-rectangle' => array(
-										'title' => __( 'Classic', 'tutor' ),
-										'image' => 'profile-layout/profile-classic.svg',
-									),
-								),
-							),
 						),
 					),
 					'block_page_elements' => array(

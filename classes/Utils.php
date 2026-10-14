@@ -459,20 +459,8 @@ class Utils {
 	 * @return string
 	 */
 	public function profile_url( $user = 0, $instructor_view = false, $fallback_url = '#' ) {
-		$instructor_profile = $this->get_option( 'public_profile_layout' ) != 'private';
-		$student_profile    = $this->get_option( 'student_public_profile_layout' ) != 'private';
-		if ( ( $instructor_view && ! $instructor_profile ) || ( ! $instructor_view && ! $student_profile ) ) {
-			return $fallback_url;
-		}
-
-		$site_url = trailingslashit( home_url() ) . 'profile/';
-		if ( ! is_object( $user ) ) {
-			$user = get_userdata( $this->get_user_id( $user ) );
-		}
-
-		$user_name = ( is_object( $user ) && isset( $user->user_nicename ) ) ? $user->user_nicename : 'user_name';
-
-		return add_query_arg( array( 'view' => $instructor_view ? 'instructor' : 'student' ), $site_url . $user_name );
+		// Public profile pages are disabled in Cosmore LMS.
+		return $fallback_url;
 	}
 
 	/**

@@ -136,9 +136,7 @@ class Template extends Tutor_Base {
 		add_filter( 'tutor_single_content_template', array( $this, 'load_single_lesson_template' ), 99, 2 );
 		add_filter( 'tutor_single_content_template', array( $this, 'load_quiz_template' ), 99, 2 );
 
-		add_filter( 'template_include', array( $this, 'student_public_profile' ), 99 );
 		add_filter( 'template_include', array( $this, 'tutor_dashboard' ), 99 );
-		add_filter( 'pre_get_document_title', array( $this, 'student_public_profile_title' ) );
 
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
@@ -553,48 +551,6 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
-	}
-
-	/**
-	 * Student public profile
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $template profile template.
-	 *
-	 * @return bool|string
-	 */
-	public function student_public_profile( $template ) {
-		global $wp_query;
-		$query_var = $wp_query->query_vars;
-		if ( ! empty( $wp_query->query['tutor_profile_username'] ) ) {
-			$template = tutor_get_template( 'public-profile' );
-		}
-
-		return $template;
-	}
-
-	/**
-	 * Show student Profile
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function student_public_profile_title() {
-		global $wp_query;
-
-		if ( ! empty( $wp_query->query['tutor_profile_username'] ) ) {
-			global $wpdb;
-
-			$user_name = sanitize_text_field( $wp_query->query['tutor_profile_username'] );
-			$user      = $wpdb->get_row( $wpdb->prepare( "SELECT display_name from {$wpdb->users} WHERE user_login = %s limit 1; ", $user_name ) );
-
-			if ( ! empty( $user->display_name ) ) {
-				return sprintf( "%s's %s", $user->display_name, __( 'Profile Page', 'tutor' ) );
-			}
-		}
-		return '';
 	}
 
 	/**
