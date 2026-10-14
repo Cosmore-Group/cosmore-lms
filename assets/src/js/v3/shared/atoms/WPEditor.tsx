@@ -23,6 +23,8 @@ interface WPEditorProps {
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
+// The plugin folder is not always `wp-content/plugins/tutor` (renamed plugin, Bedrock, custom content dir).
+const tinymceBaseUrl = `${tutorConfig.tutor_url.replace(/\/$/, '')}/assets/lib/tinymce`;
 
 // Without getDefaultSettings function editor does not initiate
 if (!window.wp.editor.getDefaultSettings) {
@@ -76,14 +78,14 @@ function editorConfig(
       remove_script_host: 0,
       plugins: `charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview${isTutorPro ? ',codesample' : ''}`,
       skin: 'light',
-      skin_url: `${tutorConfig.site_url}/wp-content/plugins/tutor/assets/lib/tinymce/light`,
+      skin_url: `${tinymceBaseUrl}/light`,
       submit_patch: true,
       link_context_toolbar: false,
       theme: 'modern',
       toolbar: !readOnly,
       toolbar1: toolbar1,
       toolbar2: isMinimal ? false : toolbar2,
-      content_css: `${tutorConfig.site_url}/wp-includes/css/dashicons.min.css,${tutorConfig.site_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.site_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
+      content_css: `${tutorConfig.site_url}/wp-includes/css/dashicons.min.css,${tutorConfig.site_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tinymceBaseUrl}/light/content.min.css`,
 
       statusbar: !readOnly,
       branding: false,

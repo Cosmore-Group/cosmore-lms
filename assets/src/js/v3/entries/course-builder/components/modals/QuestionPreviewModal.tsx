@@ -43,11 +43,14 @@ const isTutorPro = tutorConfig.tutor_pro_url;
 const TUTOR_PRO_FRONT_STYLESHEET_PATH = '/wp-content/plugins/tutor-pro/assets/css/front.css';
 const IFRAME_SRC_DOC =
   '<!doctype html><html><head><meta charset="utf-8" /></head><body><div id="preview-root"></div></body></html>';
+// Absolute URLs from the plugin URL: the folder is not always `wp-content/plugins/tutor`.
+const TUTOR_PLUGIN_URL = tutorConfig.tutor_url.replace(/\/$/, '');
 const PREVIEW_STYLESHEET_PATHS = [
-  '/wp-content/plugins/tutor/assets/css/tutor-learning-area.min.css',
-  '/wp-content/plugins/tutor/assets/css/tutor-core.min.css',
-  '/wp-content/plugins/tutor/assets/css/tutor-kids.min.css',
+  `${TUTOR_PLUGIN_URL}/assets/css/tutor-learning-area.min.css`,
+  `${TUTOR_PLUGIN_URL}/assets/css/tutor-core.min.css`,
+  `${TUTOR_PLUGIN_URL}/assets/css/tutor-kids.min.css`,
 ];
+const toStylesheetUrl = (path: string, siteUrl: string) => (/^https?:\/\//.test(path) ? path : `${siteUrl}${path}`);
 
 if (isTutorPro) {
   PREVIEW_STYLESHEET_PATHS.push(TUTOR_PRO_FRONT_STYLESHEET_PATH);
@@ -62,7 +65,7 @@ if (typeof document !== 'undefined') {
       const link = document.createElement('link');
       link.rel = 'prefetch';
       link.as = 'style';
-      link.href = `${siteUrl}${path}`;
+      link.href = toStylesheetUrl(path, siteUrl);
       document.head.appendChild(link);
     });
   }
@@ -128,7 +131,7 @@ const QuestionPreviewModal = ({ question, onClose }: QuestionPreviewModalProps) 
     PREVIEW_STYLESHEET_PATHS.forEach((path) => {
       const link = iframeDocument.createElement('link');
       link.rel = 'stylesheet';
-      link.href = `${siteUrl}${path}`;
+      link.href = toStylesheetUrl(path, siteUrl);
       link.setAttribute('data-preview-external-style', 'true');
       link.onload = handleLoadOrError;
       link.onerror = handleLoadOrError;
