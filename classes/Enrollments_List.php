@@ -30,18 +30,9 @@ class Enrollments_List {
 	const ACTION_DELETE = 'tutor_enrollment_delete';
 
 	/**
-	 * Page title, read by the view.
-	 *
-	 * @var string
-	 */
-	public $page_title;
-
-	/**
 	 * Register the form handlers.
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Enrollments', 'tutor' );
-
 		add_action( 'admin_post_' . self::ACTION_CREATE, array( $this, 'create' ) );
 		add_action( 'admin_post_' . self::ACTION_STATUS, array( $this, 'change_status' ) );
 		add_action( 'admin_post_' . self::ACTION_DELETE, array( $this, 'delete' ) );
