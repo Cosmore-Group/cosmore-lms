@@ -6,16 +6,19 @@
  * @subpackage Tutor\Students
  * @since 4.1.1
  *
- * @var \WP_User|false $student
- * @var string         $back_url
- * @var array          $summary
- * @var array          $courses
- * @var array          $quizzes
+ * @var array $data student, back_url, summary, courses, quizzes.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// `tutor_load_template_from_custom_path()` hands the data over as `$data`.
+$student  = $data['student'] ?? false;
+$back_url = $data['back_url'] ?? '';
+$summary  = $data['summary'] ?? array();
+$courses  = $data['courses'] ?? array();
+$quizzes  = $data['quizzes'] ?? array();
 
 $navbar_data = array(
 	'page_title' => $student ? $student->display_name : __( 'Student', 'tutor' ),
