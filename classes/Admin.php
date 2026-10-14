@@ -37,6 +37,7 @@ class Admin {
 		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
+		new Student_Report();
 		// Force activate menu for necessary.
 		add_filter( 'parent_file', array( $this, 'parent_menu_active' ) );
 		add_filter( 'submenu_file', array( $this, 'submenu_file_active' ), 10, 2 );
