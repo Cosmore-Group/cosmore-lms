@@ -85,7 +85,7 @@ class Rewrite_Rules extends Tutor_Base {
 		// Student Dashboard URL.
 		$dashboard_pages     = tutor_utils()->tutor_dashboard_permalinks();
 		$dashboard_page_id   = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		$dashboard_page_slug = get_post_field( 'post_name', $dashboard_page_id );
+		$dashboard_page_slug = get_page_uri( $dashboard_page_id );
 
 		foreach ( $dashboard_pages as $dashboard_key => $dashboard_page ) {
 			$new_rules[ "({$dashboard_page_slug})/{$dashboard_key}/?$" ] = 'index.php?pagename=' . $wp_rewrite->preg_index( 1 ) . '&tutor_dashboard_page=' . $dashboard_key;
