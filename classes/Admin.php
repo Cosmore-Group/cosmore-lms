@@ -27,6 +27,13 @@ class Admin {
 	use JsonResponse;
 
 	/**
+	 * Enrollments admin page.
+	 *
+	 * @var Enrollments_List
+	 */
+	private $enrollments;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -38,6 +45,7 @@ class Admin {
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		new Student_Report();
+		$this->enrollments = new Enrollments_List();
 		// Force activate menu for necessary.
 		add_filter( 'parent_file', array( $this, 'parent_menu_active' ) );
 		add_filter( 'submenu_file', array( $this, 'submenu_file_active' ), 10, 2 );
@@ -207,7 +215,14 @@ class Admin {
 						'menu_slug'   => Question_Answers_List::QUESTION_ANSWER_PAGE,
 						'callback'    => array( $this, 'question_answer' ),
 					),
-					'enrollments'       => null,
+					'enrollments'       => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Enrollments', 'tutor' ),
+						'menu_title'  => __( 'Enrollments', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => Enrollments_List::PAGE_SLUG,
+						'callback'    => array( $this->enrollments, 'render' ),
+					),
 					'reports'           => null,
 					'gradebook'         => null,
 					'instructors'       => $enable_course_marketplace ? array(
